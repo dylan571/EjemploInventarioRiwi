@@ -1,8 +1,13 @@
-from agregar_producto import crear_producto, ver_productos, actualizar_producto, eliminar_producto, calcular_inventario
+from agregar_producto import (crear_producto, 
+        ver_productos, 
+        actualizar_producto, 
+        eliminar_producto, 
+        calcular_inventario
+        )
 inventario = []
 opcion = 1
 while opcion != 0:
-    print("Inventario de productos\n")
+    print("\nInventario de productos\n")
     print("Menu de opciones\n")
     print("1. Agregar producto\n")
     print("2. Ver productos\n")

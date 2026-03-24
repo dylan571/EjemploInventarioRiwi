@@ -4,19 +4,26 @@ def crear_producto():
     nombre = input("Ingrese el nombre del producto: \n")
     print()
     while True:
-        precio = float(input("Ingrese el precio del producto: \n"))
-        print()
-        if precio <= 0:
-            print("Entrada no valida, ingrese un numero valido...")
-            continue
-        break
+        try:
+            precio = float(input("Ingrese el precio del producto: \n"))
+            print()
+            if precio <= 0:
+                print("Entrada no valida, ingrese un numero valido...")
+                continue
+            break
+        except ValueError:
+            print("Entrada no valida, ingrese un valor valido (numeros)")
     while True:
-        cantidad = int(input("Ingrese la cantidad del producto: \n"))
-        print()
-        if cantidad <= 0:
-            print("Entrada no valida, ingrese un numero valido...")
-            continue
-        break
+        try:
+            cantidad = int(input("Ingrese la cantidad del producto: \n"))
+            print()
+            if cantidad <= 0:
+                print("Entrada no valida, ingrese un numero valido...")
+                continue
+            break
+        except ValueError:
+            print("Entrada no valida, ingrese un valor valido (numeros)")
+
     subtotal = precio*cantidad
     productos.append(
         {"nombre": nombre, "precio": precio, "cantidad": cantidad, "subtotal": subtotal}
@@ -140,13 +147,21 @@ def calcular_inventario():
     if len(productos) == 0:
         print("No hay productos para calcular. \n")
         print()
-        valor_total_sumado = 0
-        cantidad_de_productos = 0
-        return valor_total_sumado, cantidad_de_productos
     else:
+        producto_mas_caro = None
+        producto_mayor_stock = None
         valor_total_sumado = 0
         cantidad_de_productos = 0
-        for producto in productos:
-            valor_total_sumado += productos["subtotal"]
-            cantidad_de_productos += productos["cantidad"]
-        return valor_total_sumado, cantidad_de_productos
+        print("Lista de productos:")
+        for i, producto in enumerate(productos):
+            if producto_mas_caro is None or producto["precio"] > producto_mas_caro["precio"]:producto_mas_caro = producto
+            if producto_mayor_stock is None or producto["cantidad"] > producto_mayor_stock["cantidad"]: producto_mayor_stock = producto
+            valor_total_sumado += producto["precio"] * producto["cantidad"]
+            cantidad_de_productos += producto["cantidad"]
+            print(f"{i + 1}. {producto['nombre']} - Precio: {producto['precio']} - Cantidad: {producto['cantidad']} - Subtotal: {producto['subtotal']}")
+    print(f"\nTotal del inventario:, {valor_total_sumado}")
+    print("Cantidad total de productos:", cantidad_de_productos)
+    print("\nProductos con mas stock:")
+    print(f"{producto_mayor_stock["nombre"]} - Cantidad: {producto_mayor_stock["cantidad"]}")
+    print("\nProducto mas caro:")
+    print(f"{producto_mas_caro["nombre"]} - Precio: {producto_mas_caro["precio"]}")
