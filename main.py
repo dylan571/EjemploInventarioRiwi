@@ -1,19 +1,22 @@
-from agregar_producto import (crear_producto, 
+from src.funciones import (cargar_csv, 
+        crear_producto, 
         ver_productos, 
         actualizar_producto, 
         eliminar_producto, 
-        calcular_inventario
+        calcular_inventario,
+        guardar_csv
         )
-inventario = []
 opcion = 1
 while opcion != 0:
     print("\nInventario de productos\n")
     print("Menu de opciones\n")
-    print("1. Agregar producto\n")
-    print("2. Ver productos\n")
-    print("3. Calcular inventario\n")
-    print("4. Actualizar producto\n")
-    print("5. Eliminar producto\n")
+    print("1. Agregar producto")
+    print("2. Ver productos")
+    print("3. Calcular inventario")
+    print("4. Actualizar producto")
+    print("5. Eliminar producto")
+    print("6. Cargar CSV")
+    print("7. Guardar CSV")
     print("0. Salir\n")
 
     while True:
@@ -35,6 +38,10 @@ while opcion != 0:
         actualizar_producto()
     if opcion == 5:
         eliminar_producto()
+    if opcion == 6:
+        cargar_csv()
+    if opcion == 7:
+        guardar_csv()
     
 
 

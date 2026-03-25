@@ -1,7 +1,10 @@
+import csv
+import os
+
 productos = []
 
 def crear_producto():
-    nombre = input("Ingrese el nombre del producto: \n")
+    nombre = input("Ingrese el nombre del producto: \n").upper()
     print()
     while True:
         try:
@@ -24,13 +27,12 @@ def crear_producto():
         except ValueError:
             print("Entrada no valida, ingrese un valor valido (numeros)")
 
-    subtotal = precio*cantidad
     productos.append(
-        {"nombre": nombre, "precio": precio, "cantidad": cantidad, "subtotal": subtotal}
+        {"nombre": nombre, "precio": precio, "cantidad": cantidad}
     )
-    print(
-        f"Producto {nombre} agregado exitosamente. \n"
-    )
+    guardar_csv()
+    #limpiar pantalla os.system("cls")
+    print(f"Producto '{nombre}' agregado y guardado en el archivo.")
 
 def ver_productos():
     if len(productos) == 0:
@@ -38,8 +40,8 @@ def ver_productos():
         print()
     else:
         print("Lista de productos:")
-    for i, producto in enumerate(productos):
-        print(f"{i + 1}. {producto['nombre']} - Precio: {producto['precio']} - Cantidad: {producto['cantidad']}")
+        for i, producto in enumerate(productos):
+            print(f"{i + 1}. {producto['nombre']} - Precio: {producto['precio']} - Cantidad: {producto['cantidad']}")
     print()
 
 def actualizar_producto():
@@ -66,7 +68,7 @@ def actualizar_producto():
     print(f"\nActualizando producto: {producto['nombre']}")
 
     # Nuevo nombre
-    nuevo_nombre = input("Nuevo nombre (dejar vacío para no cambiar): ")
+    nuevo_nombre = input("Nuevo nombre (dejar vacío para no cambiar): ").upper()
     if nuevo_nombre != "":
         producto['nombre'] = nuevo_nombre
 
@@ -97,10 +99,7 @@ def actualizar_producto():
             break
         except ValueError:
             print("Cantidad inválida")
-
-    # Recalcular subtotal
-    producto['subtotal'] = producto['precio'] * producto['cantidad']
-
+    guardar_csv()
     print("\nProducto actualizado correctamente\n")
 
 def eliminar_producto():
@@ -131,6 +130,7 @@ def eliminar_producto():
 
     if confirmar.lower() == "s":
         productos.pop(opcion - 1)
+        guardar_csv()
         print("Producto eliminado correctamente \n")
         print("Lista de productos:")
         for i, producto in enumerate(productos):
@@ -154,14 +154,48 @@ def calcular_inventario():
         cantidad_de_productos = 0
         print("Lista de productos:")
         for i, producto in enumerate(productos):
-            if producto_mas_caro is None or producto["precio"] > producto_mas_caro["precio"]:producto_mas_caro = producto
-            if producto_mayor_stock is None or producto["cantidad"] > producto_mayor_stock["cantidad"]: producto_mayor_stock = producto
+            if producto_mas_caro is None or producto["precio"] > producto_mas_caro["precio"]:
+                producto_mas_caro = producto
+            if producto_mayor_stock is None or producto["cantidad"] > producto_mayor_stock["cantidad"]: 
+                producto_mayor_stock = producto
             valor_total_sumado += producto["precio"] * producto["cantidad"]
             cantidad_de_productos += producto["cantidad"]
-            print(f"{i + 1}. {producto['nombre']} - Precio: {producto['precio']} - Cantidad: {producto['cantidad']} - Subtotal: {producto['subtotal']}")
+            print(f"{i + 1}. {producto['nombre']} - Precio: {producto['precio']} - Cantidad: {producto['cantidad']} - Subtotal: {producto["precio"] * producto["cantidad"]}")
     print(f"\nTotal del inventario:, {valor_total_sumado}")
     print("Cantidad total de productos:", cantidad_de_productos)
     print("\nProductos con mas stock:")
     print(f"{producto_mayor_stock["nombre"]} - Cantidad: {producto_mayor_stock["cantidad"]}")
     print("\nProducto mas caro:")
     print(f"{producto_mas_caro["nombre"]} - Precio: {producto_mas_caro["precio"]}")
+    
+def guardar_csv():
+    nombre_archivo = "data/inventario.csv"
+    campos = ["nombre", "precio", "cantidad"]
+
+    with open(nombre_archivo, mode="w", newline="", encoding="utf-8") as archivo:
+        escritor = csv.DictWriter(archivo, fieldnames=campos)
+
+        escritor.writeheader()
+
+        escritor.writerows(productos)
+
+    print(f"Datos guardados con exito en {nombre_archivo}")
+
+def cargar_csv():
+    lista_temporal = []
+    nombre_archivo = "data/inventario.csv"
+
+    if os.path.exists(nombre_archivo):
+    
+        with open(nombre_archivo, mode="r", encoding="utf-8") as archivo:
+            lector = csv.DictReader(archivo)
+            for fila in lector:
+                fila["precio"] = float(fila["precio"])
+                fila["cantidad"] = int(fila["cantidad"])
+                lista_temporal.append(fila)
+        global productos
+        productos = lista_temporal      
+        print("Productos cargados.")
+    else:
+        print("No se encontro el archivo. Iniciando inventario vacio.")
+    return []
