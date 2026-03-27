@@ -1,11 +1,14 @@
-from src.funciones import (cargar_csv, 
+from src.funciones import (buscar_producto, 
+        cargar_csv, 
         crear_producto, 
         ver_productos, 
         actualizar_producto, 
         eliminar_producto, 
         calcular_inventario,
-        guardar_csv
+        guardar_csv,
+        productos
         )
+
 opcion = 1
 while opcion != 0:
     print("\nInventario de productos\n")
@@ -15,8 +18,9 @@ while opcion != 0:
     print("3. Calcular inventario")
     print("4. Actualizar producto")
     print("5. Eliminar producto")
-    print("6. Cargar CSV")
-    print("7. Guardar CSV")
+    print("6. Buscar producto")
+    print("7. Cargar CSV")
+    print("8. Guardar CSV")
     print("0. Salir\n")
 
     while True:
@@ -39,8 +43,18 @@ while opcion != 0:
     if opcion == 5:
         eliminar_producto()
     if opcion == 6:
-        cargar_csv()
+        nombre_buscar = input("Ingrese el nombre a buscar: ").upper()
+
+        import src.funciones as funciones 
+        resultado = funciones.buscar_producto(funciones.productos, nombre_buscar)
+        
+        if resultado:
+            print(f"Encontrado: {resultado}")
+        else:
+            print(f"\n❌ El producto '{nombre_buscar}' no existe.")
     if opcion == 7:
+        cargar_csv()
+    if opcion == 8:
         guardar_csv()
     
 

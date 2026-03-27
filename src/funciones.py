@@ -180,7 +180,7 @@ def guardar_csv():
         escritor.writerows(productos)
 
     print(f"Datos guardados con exito en {nombre_archivo}")
-
+    
 def cargar_csv():
     lista_temporal = []
     nombre_archivo = "data/inventario.csv"
@@ -199,3 +199,10 @@ def cargar_csv():
     else:
         print("No se encontro el archivo. Iniciando inventario vacio.")
     return []
+
+def buscar_producto(productos, nombre):
+    objetivo = nombre.strip().upper()
+    for busqueda in productos:
+        if busqueda["nombre"].strip().upper() == objetivo:
+            return busqueda
+    return None
